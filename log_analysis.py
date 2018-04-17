@@ -2,13 +2,15 @@ import psycopg2
 
 DBNAME = 'news'
 
+
 def answer_questions(cur):
 
     # Execute three queries to solve questions.
 
     # Fetch popular articles
-    cur.execute("""select title, count(*) as num from articles left join log
-                   on path like '%' || slug group by title order by num desc""")
+    cur.execute("""select title, count(*) as num from articles left join
+                   log on path like '%' || slug
+                   group by title order by num desc""")
 
     # Use only top 3
     articles_page_view = cur.fetchall()[:3]
@@ -19,11 +21,12 @@ def answer_questions(cur):
 
     authors_page_view = cur.fetchall()
 
-    cur.execute("""select *
-                   from (
+    cur.execute("""select * from (
                    select total_access.day,
-                   (error.count * 100) :: numeric / total_access.count as percentage
-                   from total_access, error where total_access.day = error.day) a
+                   (error.count * 100) :: numeric / total_access.count
+                   as percentage
+                   from total_access, error
+                   where total_access.day = error.day) a
                    where a.percentage > 1.0;""")
 
     error_rates = cur.fetchall()
