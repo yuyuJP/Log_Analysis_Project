@@ -6,11 +6,8 @@ conn = psycopg2.connect(dbname=DBNAME)
 cur = conn.cursor()
 
 # Fetch popular articles
-cur.execute("""select title, count(*) as num
-             from articles left join log
-             on lower(replace(title, '''', '')) like
-             replace(replace(path, '/article/', ''), '-', ' ') || '%'
-             group by title order by num desc""")
+cur.execute("""select title, count(*) as num from articles left join log
+               on path like '%' || slug group by title order by num desc""")
 
 # Use only top 3
 result = cur.fetchall()[:3]
