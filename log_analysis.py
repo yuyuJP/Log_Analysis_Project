@@ -37,12 +37,14 @@ def answer_questions(cur):
         res_str = '{} ---- {} views'.format(item[0], item[1])
         print(res_str)
     print('\n')
+
     print('2. Who are the most popular article authors of all time? ')
 
     for item in authors_page_view:
         res_str = '{} ---- {} views'.format(item[0], item[1])
         print(res_str)
     print('\n')
+
     print('3. On which days did more than 1% of requests lead to errors?')
 
     for item in error_rates:
