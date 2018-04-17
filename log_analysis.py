@@ -4,13 +4,21 @@ DBNAME = 'news'
 
 conn = psycopg2.connect(dbname=DBNAME)
 cur = conn.cursor()
-conn.execute("""select title, count(*) as num
+
+# Fetch popular articles
+cur.execute("""select title, count(*) as num
              from articles left join log
              on lower(replace(title, '''', '')) like
              replace(replace(path, '/article/', ''), '-', ' ') || '%'
              group by title order by num desc""")
 
-result = c.fetchall()[:3]
-print(result)
+# Use only top 3
+result = cur.fetchall()[:3]
 
-db.close()
+print('1. What are the most popular three articles of all time?')
+
+for item in result:
+    res_str = '{} ---- {} views'.format(item[0], item[1])
+    print(res_str)
+
+conn.close()
